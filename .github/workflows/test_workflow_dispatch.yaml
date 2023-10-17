@@ -2,12 +2,12 @@ name: "Migration"
 on:
   pull_request:
     branches: [dev, main]
-  workflow_dispatch:
-    inputs:
-      name:
-        description: "Your name"
-        type: string
-        required: true
+  # workflow_dispatch:
+  #   inputs:
+  #     name:
+  #       description: "Your name"
+  #       type: string
+  #       required: true
 
 jobs:
   test_workflow_dispatch:
