@@ -1,5 +1,9 @@
 name: "Migration"
 on:
+  pull_request:
+    branches:
+      - [master, dev]
+    types: [opened, synchronize]
   workflow_dispatch:
     inputs:
       name:
