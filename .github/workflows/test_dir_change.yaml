@@ -8,6 +8,9 @@ on:
 jobs:
   test_dir_change:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        test_dirs: ["a", "b"]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -16,9 +19,24 @@ jobs:
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@b2d17f51244a144849c6b37a3a6791b98a51d86f
-      - name: Loop over changed files and get its directory
+      - name: Loop over changed files and get its directory, get set of changed directories
         run: |
+          declare -A changed_dirs
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "File: $file"
             echo "Directory: $(dirname $file)"
+
+            if [[ -z ${changed_dirs[$(dirname $file)]} ]]; then
+              echo "Directory not in set, adding"
+              changed_dirs[$(dirname $file)]=1
+            else
+              echo "Directory already in set"
+            fi
           done
+
+          if [[ -z ${changed_dirs[${{ matrix.test_dirs }}]} ]]; then
+            echo "No changes in ${{ matrix.test_dirs }}, exiting"
+            exit 1
+          else
+            echo "Changes in ${{ matrix.test_dirs }}, continuing"
+          fi
