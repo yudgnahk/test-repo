@@ -1,0 +1,35 @@
+name: "Test dir change new"
+on:
+  pull_request:
+    branches: [dev, master]
+    paths:
+      - "a/**"
+      - "b/**"
+
+jobs:
+  test_dir_change_new:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: "0"
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@b2d17f51244a144849c6b37a3a6791b98a51d86f
+        with:
+          dir_names: 'true'
+      - name: Print changed files
+        run: echo "${{ steps.changed-files.outputs.all_changed_files }}"
+      - name: Loop over changed files and get its directory, get set of changed directories
+        run: |
+          if [[ -z "${{ steps.changed-files.outputs.all_changed_files }}" ]]
+          then
+            echo "No changes in all apps, exiting"
+          else
+            read -a changed_files <<< "${{ steps.changed-files.outputs.all_changed_files }}"
+            echo "Changed files: ${changed_files[@]}"
+            for dir in "${changed_files[@]}"; do
+              echo "Changed dir: $dir"
+            done
+          fi
