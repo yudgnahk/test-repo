@@ -7,9 +7,6 @@ on:
                 required: true
                 default: 'Kelvin'
                 type: string
-
-    push:
-
 jobs:
     test:
         runs-on: ubuntu-latest
