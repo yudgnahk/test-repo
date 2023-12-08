@@ -8,11 +8,14 @@ on:
                 default: 'Kelvin'
                 type: string
 
+    push:
+
 jobs:
-    build:
+    test:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
 
             - name: Run a one-line script
               run: echo Hello, world! My name is ${{ github.event.inputs.name }}
+
