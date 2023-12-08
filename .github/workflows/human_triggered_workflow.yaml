@@ -1,0 +1,32 @@
+name: Human-Triggered Workflow
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check for human trigger comment
+        uses: actions/github-script@v4
+        with:
+          script: |
+            github.context.payload.issue.comments.forEach(comment => {
+              if (comment.body.toLowerCase().includes("trigger workflow")) {
+                github.actions.createComment({
+                  repo: github.context.repo.repo,
+                  owner: github.context.repo.owner,
+                  issue_number: github.context.issue.number,
+                  body: "Workflow triggered by comment!"
+                });
+                core.setOutput('trigger_found', true);
+              }
+            });
+            core.setOutput('trigger_found', false);
+          
+      - name: Run workflow only if triggered
+        if: steps.check_for_human_trigger.outputs.trigger_found
+        uses: ./your-workflow-file.yml
