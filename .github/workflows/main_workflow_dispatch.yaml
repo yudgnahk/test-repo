@@ -7,6 +7,9 @@ on:
                 required: true
                 default: 'Kelvin'
                 type: string
+    pull_request:
+        types: [opened, synchronize, reopened]
+        branches: [dev]
 jobs:
     test:
         runs-on: ubuntu-latest
