@@ -7,10 +7,25 @@ on:
       - 'gamma-*'
 
 jobs:
-  build:
+  call-reusable-workflow:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Print the tag name
-        run: echo "The tag name is ${{ github.ref_name }}"
+      - uses: actions/checkout@v4
+      - name: Set up tag
+        id: extract
+        run: |
+          TAG="${{ github.ref_name }}"
+          # Use regex to extract parts
+          if [[ "$TAG" =~ ^([^-]+)-([^-]+)-(.+)$ ]]; then
+            echo "MAJOR=${BASH_REMATCH[1]}" >> $GITHUB_ENV
+            echo "MINOR=${BASH_REMATCH[2]}" >> $GITHUB_ENV
+            echo "VERSION=${BASH_REMATCH[3]}" >> $GITHUB_ENV
+          else
+            echo "Tag format is incorrect."
+            exit 1
+          fi
+      - name: Call reusable workflow
+        uses: ./.github/workflows/reusable-workflow
+        with:
+          type: ${{ env.MAJOR }}
+          environment: ${{ env.MINOR }}
