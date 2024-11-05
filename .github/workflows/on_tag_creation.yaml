@@ -25,7 +25,7 @@ jobs:
             exit 1
           fi
       - name: Call reusable workflow
-        uses: ./.github/workflows/reusable-workflow
+        uses: ./.github/workflows/reusable_workflow.yaml
         with:
           type: ${{ env.MAJOR }}
           environment: ${{ env.MINOR }}
