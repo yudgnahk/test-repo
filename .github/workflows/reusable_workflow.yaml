@@ -18,16 +18,34 @@ on:
 jobs:
   print:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
+    environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v4
         name: Checkout
 
-      - name: Print branch, tag and get some variables from github environment
-        # There are a variable in the env, variable name is `type_NAME` where type is the value of the type input
-        # Make the variable name uppercase
+      - name: Set VAR_NAME based on type
         run: |
+          if [[ "${{ inputs.type }}" == 'alpha' ]]; then
+            echo "Setting ALPHA_NAME"
+            echo "VAR_NAME=ALPHA_NAME" >> $GITHUB_ENV
+          elif [[ "${{ inputs.type }}" == 'beta' ]]; then
+            echo "Setting BETA_NAME"
+            echo "VAR_NAME=BETA_NAME" >> $GITHUB_ENV
+          elif [[ "${{ inputs.type }}" == 'gamma' ]]; then
+            echo "Setting GAMMA_NAME"
+            echo "VAR_NAME=GAMMA_NAME" >> $GITHUB_ENV
+          else
+            echo "Type is not valid"
+            exit 1
+          fi
+        
+      - name: Print branch, tag and get some variables from github environment
+        # Using VAR_NAME set in the previous step to get the value from github environment
+
+        # VAR_NAME is the name of the environment variable that we want to get the value from
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
           echo "Branch: ${{ github.ref }}"
           echo "Tag: ${{ github.ref_name }}"
-          echo "Type: ${{ github.event.inputs.type }}"
-          echo "Type variable: ${{ env[format('{}_{}', github.event.inputs.type, 'NAME')] }}"
+          echo "VAR_NAME: ${{ env.VAR_NAME }}"
+          echo "${{ env.VAR_NAME }} value: ${{ env[env.VAR_NAME] }}"
