@@ -24,20 +24,14 @@ jobs:
         name: Checkout
 
       - name: Set VAR_NAME based on type
+      # Run some logic based on the type of event to set the VAR_NAME
+      # 1. Upper case the type of event
+      # 2. Set VAR_NAME to the upper case value and append _NAME to it
         run: |
-          if [[ "${{ inputs.type }}" == 'alpha' ]]; then
-            echo "Setting ALPHA_NAME"
-            echo "VAR_NAME=ALPHA_NAME" >> $GITHUB_ENV
-          elif [[ "${{ inputs.type }}" == 'beta' ]]; then
-            echo "Setting BETA_NAME"
-            echo "VAR_NAME=BETA_NAME" >> $GITHUB_ENV
-          elif [[ "${{ inputs.type }}" == 'gamma' ]]; then
-            echo "Setting GAMMA_NAME"
-            echo "VAR_NAME=GAMMA_NAME" >> $GITHUB_ENV
-          else
-            echo "Type is not valid"
-            exit 1
-          fi
+          type=$(echo "${{ inputs.type }}" | tr '[:lower:]' '[:upper:]')
+          TEMP_VAR_NAME="${type}_NAME"
+          echo "VAR_NAME: $TEMP_VAR_NAME"
+          echo "VAR_NAME=$TEMP_VAR_NAME" >> $GITHUB_ENV
         
       - name: Print branch, tag and get some variables from github environment
         # Using VAR_NAME set in the previous step to get the value from github environment
