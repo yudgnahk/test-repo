@@ -1,0 +1,33 @@
+name: Reusable workflow to print branch, tag and get some variables from github environment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment to run the workflow in'
+        required: true
+        default: 'dev'
+        type: string
+      type:
+        description: 'Type of event to trigger the workflow'
+        required: true
+        # Could be 'alpha', 'beta' or 'gamma'
+        default: 'alpha' 
+        type: string
+
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+
+      - name: Print branch, tag and get some variables from github environment
+        # There are a variable in the env, variable name is `type_NAME` where type is the value of the type input
+        # Make the variable name uppercase
+        run: |
+          echo "Branch: ${{ github.ref }}"
+          echo "Tag: ${{ github.ref_name }}"
+          echo "Type: ${{ github.event.inputs.type }}"
+          echo "Type variable: ${{ env[format('{}_{}', github.event.inputs.type, 'NAME')] }}"
