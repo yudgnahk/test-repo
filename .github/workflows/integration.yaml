@@ -1,5 +1,7 @@
-name: Integration tests
-on: [push]
+name: CI
+
+on: [push, pull_request]
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -8,8 +10,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12.8'
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
       - name: Install Dependencies
-        run: make dep
+        run: pip install hatch && hatch env create
 
   lintcheck:
     runs-on: ubuntu-latest
@@ -19,5 +28,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12.8'
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
+      - name: Install Dependencies
+        run: pip install hatch && hatch env create
       - name: Lint check and format check
-        run: make linting
+        run: hatch run make linting
