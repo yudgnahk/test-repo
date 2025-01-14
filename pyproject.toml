@@ -1,0 +1,57 @@
+[build-system]
+requires = ["poetry>=1.1.0"]
+build-backend = "poetry.core.masonry.api"
+
+packages = [
+    "a/",
+    "b/",
+]
+
+[project]
+name = "test-repo"
+description = "test-repo package"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = "> 3.9.7, <4.0"
+version = "0.0.1"
+dependencies = [
+    "pandas==2.0.3",
+    "pyarrow==16.1.0",
+    "pytest==8.2.2",
+    "pytest-xdist==3.6.1",
+    "ray==2.32.0",
+    "pygwalker==0.4.9.4",
+    "streamlit==1.37.1",
+    "st-cytoscape==0.0.5",
+    "streamlit-js-eval==0.1.7",
+    "streamlit-echarts==0.4.0",
+    "st-theme==1.2.3",
+    "jsmin==3.0.1",
+    "networkx==3.2.1",
+    "numpy==1.26.4",
+    "duckdb==1.1.2",
+    "rapidfuzz==3.10.0",
+    "deepdiff==8.0.1",
+    "build==1.2.1",
+    "dxpy==0.381.0",
+    "click==8.1.7",
+    "ruff==0.8.3",
+    "bump-my-version==0.25.2",
+    "hatch==1.12.0",
+    "nbformat==5.10.4",
+]
+authors = []
+maintainers = []
+
+[project.urls]
+Repository = "https://github.com/yudgnahk/test-repo"
+Issues = "https://github.com/yudgnahk/test-repo/issues"
+
+[tool.ruff]
+line-length = 120
+exclude = ["__init__.py"]
