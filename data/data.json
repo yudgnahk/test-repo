@@ -1,0 +1,22 @@
+{
+    "name": "Sample Data",
+    "version": "1.0",
+    "items": [
+        {
+            "id": 1,
+            "value": "Item One"
+        },
+        {
+            "id": 2,
+            "value": "Item Two"
+        },
+        {
+            "id": 3,
+            "value": "Item Three"
+        },
+        {
+            "id": 4,
+            "value": "Item Four"
+        }
+    ]
+}

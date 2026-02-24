@@ -1,0 +1,45 @@
+name: Reusable workflow to print branch, tag and get some variables from github environment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment to run the workflow in'
+        required: true
+        default: 'dev'
+        type: string
+      type:
+        description: 'Type of event to trigger the workflow'
+        required: true
+        # Could be 'alpha', 'beta' or 'gamma'
+        default: 'alpha' 
+        type: string
+
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+
+      - name: Set VAR_NAME based on type
+      # Run some logic based on the type of event to set the VAR_NAME
+      # 1. Upper case the type of event
+      # 2. Set VAR_NAME to the upper case value and append _NAME to it
+        run: |
+          type=$(echo "${{ inputs.type }}" | tr '[:lower:]' '[:upper:]')
+          # TEMP_VAR_NAME="${type}_NAME"
+          # echo "VAR_NAME: $TEMP_VAR_NAME"
+          echo "VAR_NAME=${type}_NAME" >> $GITHUB_ENV
+        
+      - name: Print branch, tag and get some variables from github environment
+        # Using VAR_NAME set in the previous step to get the value from github environment
+
+        # VAR_NAME is the name of the environment variable that we want to get the value from
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Tag: ${{ github.ref_name }}"
+          echo "VAR_NAME: ${{ env.VAR_NAME }}"
+          echo "${{ env.VAR_NAME }} value: ${{ vars[env.VAR_NAME] }}"

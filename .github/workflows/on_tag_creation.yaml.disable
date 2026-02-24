@@ -1,0 +1,35 @@
+name: On tag creation event
+on:
+  push:
+    tags:
+      - 'alpha-*'
+      - 'beta-*'
+      - 'gamma-*'
+
+jobs:
+  parse-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      TYPE: ${{ steps.extract.outputs.TYPE }}
+      ENVIRONMENT: ${{ steps.extract.outputs.ENVIRONMENT }}
+      VERSION: ${{ steps.extract.outputs.VERSION }}
+    steps:
+      - name: Set up tag
+        id: extract
+        run: |
+          TAG="${{ github.ref_name }}"
+          if [[ "$TAG" =~ ^([^-]+)-([^-]+)-(.+)$ ]]; then
+            echo "TYPE=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+            echo "ENVIRONMENT=${BASH_REMATCH[2]}" >> $GITHUB_OUTPUT
+            echo "VERSION=${BASH_REMATCH[3]}" >> $GITHUB_OUTPUT
+          else
+            echo "Tag format is incorrect."
+            exit 1
+          fi
+
+  call-reusable-workflow:
+    needs: parse-tag
+    uses: ./.github/workflows/reusable_workflow.yaml
+    with:
+      environment: ${{ needs.parse-tag.outputs.ENVIRONMENT }}
+      type: ${{ needs.parse-tag.outputs.TYPE }}
