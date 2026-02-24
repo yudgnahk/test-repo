@@ -1,18 +1,18 @@
 {
-    "name": "Sample Data",
-    "version": "1.0",
+    "name": "New Data",
+    "version": "2.0",
     "items": [
         {
             "id": 1,
-            "value": "Item One"
+            "value": "Item One Updated"
         },
         {
             "id": 2,
-            "value": "Item Two"
+            "value": "Item Two Updated"
         },
         {
             "id": 3,
-            "value": "Item Three"
+            "value": "Item Three Updated"
         },
         {
             "id": 4,
